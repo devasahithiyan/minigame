@@ -1,0 +1,216 @@
+/* RESET & BASIC LAYOUT */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background-color: #ffe6f0;
+  overflow: hidden; /* Prevent scrolling on mobile */
+  width: 100vw;
+  height: 100vh;
+}
+
+#gameContainer {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+/* TOP FACE (YOURS) */
+#userFaceContainer {
+  position: absolute;
+  top: 20px;
+  left: 0; /* We'll move horizontally in JS */
+}
+
+#userFace {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  transition: left 0.1s linear;
+}
+
+/* HEARTS CONTAINER */
+#heartsContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* HEARTS */
+.heart {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  background-size: cover;
+  background-position: center;
+}
+
+.heart.normal {
+  background-image: url("—Pngtree—glossy\ heart\ best\ vector\ ai_7581956.png");
+}
+
+.heart.power {
+  background-image: url("371243980_11475325.png");
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0%   { transform: scale(1);   opacity: 1; }
+  50%  { transform: scale(1.2); opacity: 0.7; }
+  100% { transform: scale(1);   opacity: 1; }
+}
+
+/* GF FACE (BOTTOM, EXACTLY ABOVE THE SLIDER) */
+#gfFace {
+  position: absolute;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  bottom: 80px; /* Matches the sliderContainer height */
+  left: 50%;
+  transform: translateX(-50%);
+  transition: left 0.1s linear;
+}
+
+/* SLIDER CONTAINER (FIXED HEIGHT) */
+#sliderContainer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 80px; /* ensures gf face sits at bottom: 80px */
+  background: rgba(255,255,255,0.4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Slider itself */
+#slider {
+  width: 90%;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  border-radius: 3px;
+  background: #ddd;
+  outline: none;
+  cursor: pointer;
+  margin-top: 4px; /* slight spacing from top of container */
+}
+
+#slider:hover {
+  background: #ccc;
+}
+
+/* Slider thumb */
+#slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  background: #ff4d94;
+  border-radius: 50%;
+  border: 2px solid white;
+  cursor: pointer;
+}
+
+#slider::-moz-range-thumb {
+  width: 24px;
+  height: 24px;
+  background: #ff4d94;
+  border-radius: 50%;
+  border: 2px solid white;
+  cursor: pointer;
+}
+
+/* Slider value label */
+#sliderValue {
+  margin-top: 4px;
+  font-size: 14px;
+  color: #666;
+}
+
+/* HUD: SCORE & LIVES */
+#hud {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+#scoreBoard,
+#livesBoard {
+  font-size: 16px;
+  background-color: rgba(255,255,255,0.6);
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+/* GAME STATUS (TIMER / GAME OVER) */
+#gameStatus {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #ff0066;
+  font-size: 24px;
+  text-align: center;
+  white-space: pre-wrap;
+}
+
+/* PARTICLE EFFECTS */
+.particle {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  opacity: 1;
+  pointer-events: none;
+  transition: transform 0.2s, opacity 0.2s;
+}
+
+/* RESTART BUTTON */
+#restartBtn {
+  margin-top: 10px;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  background-color: #28a745;
+  color: white;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+#restartBtn:hover {
+  background-color: #218838;
+}
+
+/* MOBILE-FRIENDLY ADJUSTMENTS */
+@media (max-width: 600px) {
+  #userFace,
+  #gfFace {
+    width: 100px;
+    height: 100px;
+  }
+
+  .heart {
+    width: 24px;
+    height: 24px;
+  }
+
+  #slider::-webkit-slider-thumb,
+  #slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+  }
+}
