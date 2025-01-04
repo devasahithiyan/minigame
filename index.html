@@ -2,13 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <!-- Important to help ensure the game fits well on mobile screens -->
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no"/>
   <title>Heart Drop Game - 15s + Coupon Codes</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div id="gameContainer">
-    <!-- Your Face (auto-moves, drops hearts) -->
+    <!-- Top: Your Face -->
     <div id="userFaceContainer">
       <img
         id="userFace"
@@ -16,30 +17,18 @@
         alt="Your Face"
       />
     </div>
-    
-    <!-- Container for falling hearts -->
+
+    <!-- Falling hearts container -->
     <div id="heartsContainer"></div>
 
-    <!-- Girlfriend's face (aligned above slider) -->
+    <!-- Girlfriend's Face -->
     <img
       id="gfFace"
       src="ritu.png"
       alt="GF Face"
     />
 
-    <!-- Slider Container -->
-    <div id="sliderContainer">
-      <input
-        type="range"
-        id="slider"
-        min="0"
-        max="100"
-        value="50"
-      />
-      <div id="sliderValue">50%</div>
-    </div>
-
-    <!-- Score, Lives, Timer/Status -->
+    <!-- Score, Lives, Timer/Status HUD -->
     <div id="hud">
       <div id="scoreBoard">Score: 0</div>
       <div id="livesBoard">Lives: 5</div>
@@ -47,7 +36,19 @@
     <div id="gameStatus"></div>
   </div>
 
-  <!-- Web-hosted sounds (from CodePen) -->
+  <!-- A fixed slider area so it stays at the bottom of the screen -->
+  <div id="sliderContainer">
+    <input
+      type="range"
+      id="slider"
+      min="0"
+      max="100"
+      value="50"
+    />
+    <div id="sliderValue">50%</div>
+  </div>
+
+  <!-- Web-hosted sounds -->
   <audio
     id="bgMusic"
     src="https://assets.codepen.io/3277517/Puzzle-Game_Looping.mp3"

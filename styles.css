@@ -8,22 +8,23 @@
 body {
   font-family: Arial, sans-serif;
   background-color: #ffe6f0;
-  overflow: hidden; /* Prevent scrolling on mobile */
+  overflow: hidden; /* Helps on mobile to prevent extra scrolling */
   width: 100vw;
   height: 100vh;
 }
 
+/* The main game container */
 #gameContainer {
   position: relative;
   width: 100%;
   height: 100%;
 }
 
-/* TOP FACE (YOURS) */
+/* Top face (yours) */
 #userFaceContainer {
   position: absolute;
   top: 20px;
-  left: 0; /* We'll move horizontally in JS */
+  left: 0;
 }
 
 #userFace {
@@ -33,7 +34,7 @@ body {
   transition: left 0.1s linear;
 }
 
-/* HEARTS CONTAINER */
+/* Hearts container */
 #heartsContainer {
   position: absolute;
   top: 0;
@@ -42,7 +43,7 @@ body {
   height: 100%;
 }
 
-/* HEARTS */
+/* Hearts */
 .heart {
   position: absolute;
   width: 30px;
@@ -52,7 +53,7 @@ body {
 }
 
 .heart.normal {
-  background-image: url("—Pngtree—glossy\ heart\ best\ vector\ ai_7581956.png");
+  background-image: url("—Pngtree—glossy heart best vector ai_7581956.png");
 }
 
 .heart.power {
@@ -66,25 +67,82 @@ body {
   100% { transform: scale(1);   opacity: 1; }
 }
 
-/* GF FACE (BOTTOM, EXACTLY ABOVE THE SLIDER) */
+/* GF Face (bottom) */
 #gfFace {
   position: absolute;
   width: 180px;
   height: 180px;
   border-radius: 50%;
-  bottom: 80px; /* Matches the sliderContainer height */
+  bottom: 80px; /* We'll see if 80px works well with the new slider height */
   left: 50%;
   transform: translateX(-50%);
   transition: left 0.1s linear;
 }
 
-/* SLIDER CONTAINER (FIXED HEIGHT) */
-#sliderContainer {
+/* Score, Lives, Timer/Status HUD */
+#hud {
   position: absolute;
+  top: 10px;
+  left: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+#scoreBoard,
+#livesBoard {
+  font-size: 16px;
+  background-color: rgba(255,255,255,0.6);
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+#gameStatus {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #ff0066;
+  font-size: 24px;
+  text-align: center;
+  white-space: pre-wrap;
+}
+
+/* Particle effects */
+.particle {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  opacity: 1;
+  pointer-events: none;
+  transition: transform 0.2s, opacity 0.2s;
+}
+
+/* Restart Button */
+#restartBtn {
+  margin-top: 10px;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  background-color: #28a745;
+  color: white;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+#restartBtn:hover {
+  background-color: #218838;
+}
+
+/* The slider container: fixed at the bottom */
+#sliderContainer {
+  position: fixed; /* So it stays in view on mobile */
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 80px; /* ensures gf face sits at bottom: 80px */
+  height: 60px; /* a bit smaller than 80px to ensure more screen space */
   background: rgba(255,255,255,0.4);
   display: flex;
   flex-direction: column;
@@ -92,7 +150,7 @@ body {
   justify-content: center;
 }
 
-/* Slider itself */
+/* The slider itself */
 #slider {
   width: 90%;
   -webkit-appearance: none;
@@ -102,14 +160,13 @@ body {
   background: #ddd;
   outline: none;
   cursor: pointer;
-  margin-top: 4px; /* slight spacing from top of container */
+  margin-top: 4px;
 }
 
 #slider:hover {
   background: #ccc;
 }
 
-/* Slider thumb */
 #slider::-webkit-slider-thumb {
   -webkit-appearance: none;
   appearance: none;
@@ -130,87 +187,32 @@ body {
   cursor: pointer;
 }
 
-/* Slider value label */
 #sliderValue {
   margin-top: 4px;
   font-size: 14px;
   color: #666;
 }
 
-/* HUD: SCORE & LIVES */
-#hud {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-#scoreBoard,
-#livesBoard {
-  font-size: 16px;
-  background-color: rgba(255,255,255,0.6);
-  padding: 5px 10px;
-  border-radius: 5px;
-}
-
-/* GAME STATUS (TIMER / GAME OVER) */
-#gameStatus {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: #ff0066;
-  font-size: 24px;
-  text-align: center;
-  white-space: pre-wrap;
-}
-
-/* PARTICLE EFFECTS */
-.particle {
-  position: absolute;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  opacity: 1;
-  pointer-events: none;
-  transition: transform 0.2s, opacity 0.2s;
-}
-
-/* RESTART BUTTON */
-#restartBtn {
-  margin-top: 10px;
-  padding: 10px 20px;
-  font-size: 16px;
-  border: none;
-  border-radius: 5px;
-  background-color: #28a745;
-  color: white;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-#restartBtn:hover {
-  background-color: #218838;
-}
-
-/* MOBILE-FRIENDLY ADJUSTMENTS */
+/* Mobile-Friendlier Adjustments */
 @media (max-width: 600px) {
   #userFace,
   #gfFace {
     width: 100px;
     height: 100px;
   }
-
   .heart {
     width: 24px;
     height: 24px;
   }
-
   #slider::-webkit-slider-thumb,
   #slider::-moz-range-thumb {
     width: 20px;
     height: 20px;
+  }
+  #sliderContainer {
+    height: 50px; /* Could go even smaller on narrower screens */
+  }
+  #gfFace {
+    bottom: 50px; /* match the new smaller slider container height */
   }
 }

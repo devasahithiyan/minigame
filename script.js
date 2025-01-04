@@ -21,17 +21,17 @@ const missSound = document.getElementById('missSound');
 /*******************************************************
  * GAME VARIABLES
  *******************************************************/
-// GAME_DURATION: 20 seconds as requested
+/* Example: 15 seconds game */
 let score = 0;
 let lives = 5;
 let gameActive = true;
-const GAME_DURATION = 15000; // 20 seconds
+const GAME_DURATION = 15000; // 15 seconds
 let startTime = null;
 
 // Face auto-movement
 let userFaceX = 0;
 let userFaceSpeed = 4;
-let userFaceDirection = 1; // 1 = move right, -1 = move left
+let userFaceDirection = 1; // 1 = right, -1 = left
 
 // Heart dropping
 let HEART_DROP_INTERVAL = 1200;
@@ -44,7 +44,7 @@ let lastTimestamp = 0;
  * POWER HEART CHANCE
  *******************************************************/
 function isPowerHeart() {
-  // 20% chance to produce a power heart
+  // 30% chance as per your code
   return Math.random() < 0.3;
 }
 
@@ -115,10 +115,6 @@ function gameLoop(timestamp) {
     gameStatus.textContent = `Time left: ${secondsLeft}s`;
   }
 
-  // Optional difficulty bump after 10s or 15s, etc. (Up to you)
-  // Example: after 10s, drop frequency becomes 1000ms
-  // if(elapsed > 10000 && HEART_DROP_INTERVAL !== 1000) { ... }
-
   requestAnimationFrame(gameLoop);
 }
 
@@ -126,7 +122,6 @@ function gameLoop(timestamp) {
  * MOVE YOUR FACE
  *******************************************************/
 function moveUserFace(deltaTime) {
-  // scale movement by frame time (~16.67ms at 60fps)
   const moveAmount = userFaceSpeed * (deltaTime / 16.67) * userFaceDirection;
   userFaceX += moveAmount;
 
@@ -136,8 +131,7 @@ function moveUserFace(deltaTime) {
   if(userFaceX < 0) {
     userFaceX = 0;
     userFaceDirection = 1;
-  }
-  else if(userFaceX > maxRight) {
+  } else if(userFaceX > maxRight) {
     userFaceX = maxRight;
     userFaceDirection = -1;
   }
@@ -152,14 +146,14 @@ function dropHeart() {
   if(!gameActive) return;
 
   const heart = document.createElement('div');
-  const isPower = isPowerHeart();
-  heart.classList.add('heart', isPower ? 'power' : 'normal');
+  const power = isPowerHeart();
+  heart.classList.add('heart', power ? 'power' : 'normal');
 
   // Position the heart under your face
   const faceRect = userFaceContainer.getBoundingClientRect();
   const heartSize = 30;
   heart.style.left = `${
-    faceRect.left + (faceRect.width/2) - (heartSize/2)
+    faceRect.left + (faceRect.width / 2) - (heartSize / 2)
   }px`;
   heart.style.top = `${faceRect.bottom}px`;
 
@@ -177,17 +171,17 @@ function dropHeart() {
     let currentTop = parseFloat(heart.style.top);
     heart.style.top = `${currentTop + fallSpeed}px`;
 
-    // Collision check
+    // Collision
     const heartRect = heart.getBoundingClientRect();
     const gfRect = gfFace.getBoundingClientRect();
 
-    if(
+    if (
       heartRect.bottom >= gfRect.top &&
       heartRect.right >= gfRect.left &&
       heartRect.left <= gfRect.right
     ) {
       // Caught
-      score += isPower ? 3 : 1;
+      score += power ? 3 : 1;
       updateScore();
 
       if(catchSound) {
@@ -195,16 +189,17 @@ function dropHeart() {
         catchSound.play().catch(()=>{});
       }
 
+      // Particles
       createParticles(
-        heartRect.left + heartRect.width/2,
-        heartRect.top + heartRect.height/2
+        heartRect.left + heartRect.width / 2,
+        heartRect.top + heartRect.height / 2
       );
 
       clearInterval(fallInterval);
       heart.remove();
     }
 
-    // Missed?
+    // Missed
     if(currentTop > window.innerHeight) {
       clearInterval(fallInterval);
       heart.remove();
@@ -217,34 +212,33 @@ function dropHeart() {
  * PARTICLES
  *******************************************************/
 function createParticles(x, y) {
-  const numParticles = 10;
-  for(let i=0; i<numParticles; i++) {
+  const num = 10;
+  for(let i=0; i<num; i++){
     const p = document.createElement('div');
     p.classList.add('particle');
     p.style.left = `${x}px`;
     p.style.top  = `${y}px`;
-    p.style.backgroundColor = `hsl(${Math.random()*360},100%,50%)`;
+    p.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
     heartsContainer.appendChild(p);
 
-    // random velocity
-    const angle = Math.random()*Math.PI*2;
-    const speed = Math.random()*4 + 1;
-    let vx = Math.cos(angle)*speed;
-    let vy = Math.sin(angle)*speed;
+    const angle = Math.random() * Math.PI * 2;
+    const speed = Math.random() * 4 + 1;
+    let vx = Math.cos(angle) * speed;
+    let vy = Math.sin(angle) * speed;
 
     let px = x, py = y;
 
-    const partInterval = setInterval(() => {
+    const partInt = setInterval(() => {
       if(!gameActive) {
-        clearInterval(partInterval);
+        clearInterval(partInt);
         p.remove();
         return;
       }
 
       px += vx;
       py += vy;
-      p.style.left = px + "px";
-      p.style.top  = py + "px";
+      p.style.left = `${px}px`;
+      p.style.top  = `${py}px`;
 
       let op = parseFloat(p.style.opacity || "1");
       op = Math.max(0, op - 0.02);
@@ -257,7 +251,7 @@ function createParticles(x, y) {
       p.style.transform = `scale(${scale})`;
 
       if(op <= 0 || px<0 || px>window.innerWidth || py>window.innerHeight) {
-        clearInterval(partInterval);
+        clearInterval(partInt);
         p.remove();
       }
     }, 20);
@@ -306,17 +300,8 @@ function loseLife() {
 }
 
 /*******************************************************
- * COUPON CODE LOGIC
+ * COUPON CODE LOGIC (if desired)
  *******************************************************/
-/** 
- * Return explicit coupon codes based on final score.
- * Adjust as you prefer.
- *
- * 0-4  => "selfiewithme"
- * 5-9  => "coffeedatewithme"
- * 10-14 => "moviedatewithme"
- * 15+   => "secretgiftwithme"
- */
 function getCouponCode(score) {
   if(score < 8) {
     return "selfiewithme";
@@ -336,13 +321,9 @@ function endGame() {
   console.log("Game Over");
   gameActive = false;
 
-  if(bgMusic) {
-    bgMusic.pause();
-  }
-
+  if(bgMusic) bgMusic.pause();
   clearInterval(heartDropTimer);
 
-  // Get coupon code based on final score
   const coupon = getCouponCode(score);
 
   // Show final message with coupon code
